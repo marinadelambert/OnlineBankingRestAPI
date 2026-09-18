@@ -158,7 +158,6 @@ class AccAccountServiceTest {
         AccAccount accAccount = mock(AccAccount.class);
 
         when(accAccount.getCurrentBalance()).thenReturn(BigDecimal.valueOf(-1));
-        when(accAccountSaveDto.getCurrentBalance()).thenReturn(BigDecimal.valueOf(-1));
 
         doThrow(IllegalFieldException.class).when(accAccountValidationService).controlIsBalanceNotNegative(accAccount);
 
