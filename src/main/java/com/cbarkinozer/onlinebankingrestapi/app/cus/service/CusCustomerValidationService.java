@@ -30,6 +30,16 @@ public class CusCustomerValidationService {
         
     }
 
+    public void controlIsCustomerOwnedByCurrentUser(Long id) {
+
+        Long currentCustomerId = cusCustomerEntityService.getCurrentCustomerId();
+
+        if (currentCustomerId == null || !currentCustomerId.equals(id)){
+
+            throw new ItemNotFoundException(CusErrorMessage.CUSTOMER_NOT_FOUND);
+        }
+    }
+
     public void controlAreFieldsNonNull(CusCustomer cusCustomer) {
         boolean hasNullField =
                 cusCustomer.getName().isBlank()             ||

@@ -33,6 +33,8 @@ public class CusCustomerService {
 
     public CusCustomerDto findCustomerById(Long id) {
 
+        cusCustomerValidationService.controlIsCustomerOwnedByCurrentUser(id);
+
         CusCustomer cusCustomer = cusCustomerEntityService.getByIdWithControl(id);
 
         CusCustomerDto cusCustomerDto = CusCustomerMapper.INSTANCE.convertToCusCustomerDto(cusCustomer);
@@ -60,6 +62,7 @@ public class CusCustomerService {
     public CusCustomerDto updateCustomer(CusCustomerUpdateDto cusCustomerUpdateDto) {
 
         Long id = cusCustomerUpdateDto.getId();
+        cusCustomerValidationService.controlIsCustomerOwnedByCurrentUser(id);
         cusCustomerValidationService.controlIsCustomerExist(id);
 
         CusCustomer cusCustomer = CusCustomerMapper.INSTANCE.convertToCusCustomer(cusCustomerUpdateDto);
@@ -83,6 +86,8 @@ public class CusCustomerService {
     }
 
     public void deleteCustomer(Long id) {
+
+        cusCustomerValidationService.controlIsCustomerOwnedByCurrentUser(id);
 
         CusCustomer cusCustomer = cusCustomerEntityService.getByIdWithControl(id);
 
