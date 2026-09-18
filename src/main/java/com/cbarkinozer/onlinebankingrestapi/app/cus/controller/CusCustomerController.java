@@ -14,6 +14,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +29,9 @@ public class CusCustomerController {
     @Operation(
             tags = "Customer Controller",
             summary = "All Customers",
-            description = "Gets all customers."
+            description = "Gets all customers. Requires the admin authority."
     )
+    @PreAuthorize("hasAuthority('admin')")
     @GetMapping
     public ResponseEntity<RestResponse<List<CusCustomerDto>>> findAllCustomers(){
 

@@ -98,6 +98,7 @@ class CusCustomerServiceTest {
         Long cusCustomerId = cusCustomer.getId();
         CusCustomerDto expectedResult = createDummyCusCustomerDto();
 
+        when(cusCustomerEntityService.getCurrentCustomerId()).thenReturn(cusCustomerId);
         when(cusCustomerEntityService.getByIdWithControl(cusCustomerId)).thenReturn(cusCustomer);
 
         CusCustomerDto result = cusCustomerService.findCustomerById(cusCustomerId);
@@ -107,14 +108,27 @@ class CusCustomerServiceTest {
     }
 
     @Test
+    void shouldNotFindCustomerById_WhenCusCustomerId_IsNotCurrentCustomer() {
+
+        when(cusCustomerEntityService.getCurrentCustomerId()).thenReturn(1L);
+
+        ItemNotFoundException result = assertThrows(ItemNotFoundException.class,
+                () -> cusCustomerService.findCustomerById(2L));
+
+        assertEquals(CusErrorMessage.CUSTOMER_NOT_FOUND, result.getBaseErrorMessage());
+        verify(cusCustomerEntityService, never()).getByIdWithControl(anyLong());
+    }
+
+    @Test
     void shouldNotFindCustomerById_WhenCusCustomerId_DoesNotExist() {
 
         ItemNotFoundException itemNotFoundException = new ItemNotFoundException(GenErrorMessage.ITEM_NOT_FOUND);
 
-        when(cusCustomerEntityService.getByIdWithControl(anyLong())).thenThrow(itemNotFoundException);
+        when(cusCustomerEntityService.getCurrentCustomerId()).thenReturn(1L);
+        when(cusCustomerEntityService.getByIdWithControl(1L)).thenThrow(itemNotFoundException);
 
         ItemNotFoundException result = assertThrows(ItemNotFoundException.class,
-                () -> cusCustomerService.findCustomerById(anyLong()));
+                () -> cusCustomerService.findCustomerById(1L));
 
         assertEquals(itemNotFoundException, result);
         assertEquals(itemNotFoundException.getBaseErrorMessage().getMessage(), result.getBaseErrorMessage().getMessage());
@@ -206,6 +220,7 @@ class CusCustomerServiceTest {
         CusCustomer cusCustomer = createDummyCusCustomer();
         IllegalFieldException illegalFieldException = new IllegalFieldException(CusErrorMessage.IDENTITY_NO_MUST_BE_UNIQUE);
 
+        when(cusCustomerEntityService.getCurrentCustomerId()).thenReturn(cusCustomerUpdateDto.getId());
         doThrow(IllegalFieldException.class).when(cusCustomerValidationService).controlIsIdentityNoUnique(cusCustomer);
 
         IllegalFieldException result = assertThrows(IllegalFieldException.class,
@@ -238,6 +253,7 @@ class CusCustomerServiceTest {
 
         IllegalFieldException illegalFieldException = new IllegalFieldException(CusErrorMessage.FIELD_CANNOT_BE_NULL);
 
+        when(cusCustomerEntityService.getCurrentCustomerId()).thenReturn(cusCustomerUpdateDto.getId());
         doThrow(IllegalFieldException.class).when(cusCustomerValidationService).controlAreFieldsNonNull(cusCustomer);
 
         IllegalFieldException result = assertThrows(IllegalFieldException.class,
@@ -253,12 +269,27 @@ class CusCustomerServiceTest {
     void shouldDeleteCustomer() {
 
         CusCustomer cusCustomer = createDummyCusCustomer();
+        Long cusCustomerId = cusCustomer.getId();
 
-        when(cusCustomerEntityService.getByIdWithControl(anyLong())).thenReturn(cusCustomer);
+        when(cusCustomerEntityService.getCurrentCustomerId()).thenReturn(cusCustomerId);
+        when(cusCustomerEntityService.getByIdWithControl(cusCustomerId)).thenReturn(cusCustomer);
 
-        cusCustomerService.deleteCustomer(anyLong());
+        cusCustomerService.deleteCustomer(cusCustomerId);
 
-        verify(cusCustomerEntityService).getByIdWithControl(anyLong());
+        verify(cusCustomerEntityService).getByIdWithControl(cusCustomerId);
+        verify(cusCustomerEntityService).delete(cusCustomer);
+    }
+
+    @Test
+    void shouldNotDeleteCustomer_WhenId_IsNotCurrentCustomer() {
+
+        when(cusCustomerEntityService.getCurrentCustomerId()).thenReturn(1L);
+
+        ItemNotFoundException result = assertThrows(ItemNotFoundException.class,
+                () -> cusCustomerService.deleteCustomer(2L));
+
+        assertEquals(CusErrorMessage.CUSTOMER_NOT_FOUND, result.getBaseErrorMessage());
+        verify(cusCustomerEntityService, never()).delete(any());
     }
 
     @Test
