@@ -36,7 +36,7 @@ public class CusCustomerValidationService {
 
         if (currentCustomerId == null || !currentCustomerId.equals(id)){
 
-            throw new ItemNotFoundException(CusErrorMessage.CUSTOMER_NOT_FOUND);
+            throw new IllegalFieldException(CusErrorMessage.CUSTOMER_DOES_NOT_BELONG_TO_CURRENT_USER);
         }
     }
 
