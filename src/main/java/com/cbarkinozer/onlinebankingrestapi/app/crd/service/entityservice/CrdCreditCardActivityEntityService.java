@@ -1,8 +1,12 @@
 package com.cbarkinozer.onlinebankingrestapi.app.crd.service.entityservice;
 
 import com.cbarkinozer.onlinebankingrestapi.app.crd.dao.CrdCreditCardActivityDao;
+import com.cbarkinozer.onlinebankingrestapi.app.crd.dao.CrdCreditCardDao;
 import com.cbarkinozer.onlinebankingrestapi.app.crd.dto.CrdCreditCardActivityAnalysisDto;
+import com.cbarkinozer.onlinebankingrestapi.app.crd.entity.CrdCreditCard;
 import com.cbarkinozer.onlinebankingrestapi.app.crd.entity.CrdCreditCardActivity;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.enums.GenErrorMessage;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.UnauthorizedAccessException;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.service.BaseEntityService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -18,13 +22,28 @@ import java.util.Optional;
 @Transactional
 public class CrdCreditCardActivityEntityService extends BaseEntityService<CrdCreditCardActivity, CrdCreditCardActivityDao> {
 
-    public CrdCreditCardActivityEntityService(CrdCreditCardActivityDao dao) {
+    private final CrdCreditCardDao crdCreditCardDao;
+
+    public CrdCreditCardActivityEntityService(CrdCreditCardActivityDao dao, CrdCreditCardDao crdCreditCardDao) {
         super(dao);
+        this.crdCreditCardDao = crdCreditCardDao;
+    }
+
+    @Override
+    protected Long resolveOwnerCustomerId(CrdCreditCardActivity crdCreditCardActivity) {
+
+        CrdCreditCard crdCreditCard = crdCreditCardDao.findById(crdCreditCardActivity.getCrdCreditCardId())
+                .orElseThrow(() -> new UnauthorizedAccessException(GenErrorMessage.UNAUTHORIZED_ACCESS));
+
+        return crdCreditCard.getOwnerCustomerId();
     }
 
     public List<CrdCreditCardActivity> findCreditCardActivityByAmountInterval(BigDecimal min, BigDecimal max) {
 
-        List<CrdCreditCardActivity> crdCreditCardActivityList = getDao().findAllByAmountBetween(min,max);
+        Long currentCustomerId = getCurrentCustomerId();
+
+        List<CrdCreditCardActivity> crdCreditCardActivityList = getDao()
+                .findAllByCusCustomerIdAndAmountBetween(currentCustomerId,min,max);
 
         return crdCreditCardActivityList;
     }

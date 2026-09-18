@@ -26,7 +26,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     public UserDetails loadUserByUserId(Long id) {
 
-        CusCustomer cusCustomer = cusCustomerEntityService.getByIdWithControl(id);
+        CusCustomer cusCustomer = cusCustomerEntityService.getByIdWithoutOwnerControl(id);
 
         return JwtUserDetails.create(cusCustomer);
     }

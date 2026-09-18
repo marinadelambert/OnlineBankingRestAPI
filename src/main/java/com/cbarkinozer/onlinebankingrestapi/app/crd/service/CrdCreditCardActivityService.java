@@ -36,7 +36,7 @@ public class CrdCreditCardActivityService {
 
     public List<CrdCreditCardActivityAnalysisDto> getCardActivityAnalysis(Long creditCardId) {
 
-        crdCreditCardActivityValidationService.controlIsCreditCardExist(creditCardId);
+        crdCreditCardActivityValidationService.controlIsCreditCardOfCurrentCustomer(creditCardId);
 
         List<CrdCreditCardActivityAnalysisDto> crdCreditCardActivityAnalysisDtoList = crdCreditCardActivityEntityService.getCardActivityAnalysis(creditCardId);
 

@@ -23,7 +23,7 @@ public class AccAccountService {
 
     public List<AccAccountDto> findAllAccounts() {
 
-        List<AccAccount> accAccountList = accAccountEntityService.findAllActiveAccounts();
+        List<AccAccount> accAccountList = accAccountEntityService.findAllActiveAccountsOfCurrentCustomer();
 
         List<AccAccountDto> accAccountDtoList = AccAccountMapper.INSTANCE.convertToAccAccountDtoList(accAccountList);
 
@@ -40,6 +40,8 @@ public class AccAccountService {
     }
 
     public List<AccAccountDto> findAccountByCustomerId(Long customerId) {
+
+        accAccountEntityService.controlIsCurrentCustomer(customerId);
 
         List<AccAccount> accAccountList = accAccountEntityService.findAccountByCustomerId(customerId);
 

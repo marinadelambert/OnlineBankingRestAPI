@@ -38,7 +38,7 @@ class AccAccountServiceTest {
         List<AccAccount> accAccountList = new ArrayList<>();
         accAccountList.add(accAccount);
 
-        when(accAccountEntityService.findAllActiveAccounts()).thenReturn(accAccountList);
+        when(accAccountEntityService.findAllActiveAccountsOfCurrentCustomer()).thenReturn(accAccountList);
 
         List<AccAccountDto> result = accAccountService.findAllAccounts();
 
@@ -50,7 +50,7 @@ class AccAccountServiceTest {
 
         List<AccAccount> accAccountList = new ArrayList<>();
 
-        when(accAccountEntityService.findAllActiveAccounts()).thenReturn(accAccountList);
+        when(accAccountEntityService.findAllActiveAccountsOfCurrentCustomer()).thenReturn(accAccountList);
 
         List<AccAccountDto> result = accAccountService.findAllAccounts();
 

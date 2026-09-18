@@ -18,7 +18,16 @@ import java.util.stream.Collectors;
 @Repository
 public interface CrdCreditCardActivityDao extends JpaRepository<CrdCreditCardActivity,Long> {
 
-    List<CrdCreditCardActivity> findAllByAmountBetween(BigDecimal min, BigDecimal max);
+    @Query(value = "SELECT activity "+
+            "FROM CrdCreditCardActivity activity "+
+            "JOIN CrdCreditCard card "+
+            "ON card.id = activity.crdCreditCardId "+
+            "WHERE card.cusCustomerId = :cusCustomerId "+
+            "AND activity.amount BETWEEN :min AND :max"
+    )
+    List<CrdCreditCardActivity> findAllByCusCustomerIdAndAmountBetween(
+            @Param("cusCustomerId") Long cusCustomerId,
+            @Param("min") BigDecimal min, @Param("max") BigDecimal max);
 
     List<CrdCreditCardActivity> findAllByCrdCreditCardIdAndTransactionDateBetween(Long crdCreditCardId, LocalDateTime startDate, LocalDateTime endDate);
 

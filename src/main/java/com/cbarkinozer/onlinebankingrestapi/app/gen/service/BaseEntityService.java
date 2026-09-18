@@ -2,8 +2,10 @@ package com.cbarkinozer.onlinebankingrestapi.app.gen.service;
 
 import com.cbarkinozer.onlinebankingrestapi.app.gen.entity.BaseAdditionalFields;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.entity.BaseEntity;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.entity.CustomerOwnedEntity;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.enums.GenErrorMessage;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.ItemNotFoundException;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.UnauthorizedAccessException;
 import com.cbarkinozer.onlinebankingrestapi.app.sec.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +79,16 @@ public abstract class BaseEntityService<E extends BaseEntity, D extends JpaRepos
 
     public E getByIdWithControl(Long id) {
 
+        E entity = getByIdWithoutOwnerControl(id);
+
+        controlIsEntityOwnedByCurrentCustomer(entity);
+
+        return entity;
+    }
+
+    /** Only for flows that run outside of a customer session, such as authentication. */
+    public E getByIdWithoutOwnerControl(Long id) {
+
         Optional<E> entityOptional = findById(id);
 
         E entity;
@@ -87,6 +99,35 @@ public abstract class BaseEntityService<E extends BaseEntity, D extends JpaRepos
         }
 
         return entity;
+    }
+
+    public void controlIsEntityOwnedByCurrentCustomer(E entity) {
+
+        Long ownerCustomerId = resolveOwnerCustomerId(entity);
+
+        controlIsCurrentCustomer(ownerCustomerId);
+    }
+
+    /**
+     * Owner of the entity. Entity services of entities that do not carry a customer id themselves
+     * override this and resolve the owner over the related account, credit card or loan.
+     */
+    protected Long resolveOwnerCustomerId(E entity) {
+
+        if (entity instanceof CustomerOwnedEntity){
+            return ((CustomerOwnedEntity) entity).getOwnerCustomerId();
+        }
+
+        throw new UnauthorizedAccessException(GenErrorMessage.UNAUTHORIZED_ACCESS);
+    }
+
+    public void controlIsCurrentCustomer(Long customerId) {
+
+        Long currentCustomerId = getCurrentCustomerId();
+
+        if (currentCustomerId == null || !currentCustomerId.equals(customerId)){
+            throw new UnauthorizedAccessException(GenErrorMessage.UNAUTHORIZED_ACCESS);
+        }
     }
 
     protected PageRequest getPageRequest(Optional<Integer> pageOptional, Optional<Integer> sizeOptional) {

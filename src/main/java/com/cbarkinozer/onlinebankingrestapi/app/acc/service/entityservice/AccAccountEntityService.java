@@ -20,9 +20,11 @@ public class AccAccountEntityService extends BaseEntityService<AccAccount, AccAc
         super(accAccountDao);
     }
 
-    public List<AccAccount> findAllActiveAccounts() {
+    public List<AccAccount> findAllActiveAccountsOfCurrentCustomer() {
 
-        List<AccAccount> accAccountList = getDao().findAllByStatusType(GenStatusType.ACTIVE);
+        Long currentCustomerId = getCurrentCustomerId();
+
+        List<AccAccount> accAccountList = getDao().findAllByCustomerIdAndStatusType(currentCustomerId, GenStatusType.ACTIVE);
 
         return accAccountList;
     }

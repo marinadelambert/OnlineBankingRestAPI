@@ -51,7 +51,7 @@ class CrdCreditCardServiceTest {
         List<CrdCreditCard> crdCreditCardList = new ArrayList<>();
         crdCreditCardList.add(crdCreditCard);
 
-        when(crdCreditCardEntityService.findAllActiveCreditCardList()).thenReturn(crdCreditCardList);
+        when(crdCreditCardEntityService.findAllActiveCreditCardListOfCurrentCustomer()).thenReturn(crdCreditCardList);
 
         List<CrdCreditCardDto> result = crdCreditCardService.findAllCreditCards();
 
