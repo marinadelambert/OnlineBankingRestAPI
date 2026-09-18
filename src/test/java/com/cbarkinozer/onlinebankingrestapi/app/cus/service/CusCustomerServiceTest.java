@@ -231,6 +231,22 @@ class CusCustomerServiceTest {
     }
 
     @Test
+    void shouldNotUpdateCustomer_WhenCustomer_DoesNotBelongToCurrentUser() {
+
+        CusCustomerUpdateDto cusCustomerUpdateDto = createDummyCusCustomerUpdateDto();
+
+        IllegalFieldException illegalFieldException = new IllegalFieldException(CusErrorMessage.CUSTOMER_DOES_NOT_BELONG_TO_CURRENT_USER);
+
+        doThrow(illegalFieldException).when(cusCustomerValidationService).controlIsCustomerOwnedByCurrentUser(cusCustomerUpdateDto.getId());
+
+        IllegalFieldException result = assertThrows(IllegalFieldException.class,
+                () -> cusCustomerService.updateCustomer(cusCustomerUpdateDto));
+
+        assertEquals(illegalFieldException, result);
+        verify(cusCustomerEntityService, never()).saveCustomer(any());
+    }
+
+    @Test
     void shouldNotUpdateCustomer_WhenFields_AreNull() {
 
         CusCustomerUpdateDto cusCustomerUpdateDto = createDummyCusCustomerUpdateDto();

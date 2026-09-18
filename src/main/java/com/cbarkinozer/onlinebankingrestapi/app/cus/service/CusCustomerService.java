@@ -24,7 +24,7 @@ public class CusCustomerService {
 
     public List<CusCustomerDto> findAllCustomers(){
 
-        List<CusCustomer> cusCustomerList = cusCustomerEntityService.findCurrentCustomerAsList();
+        List<CusCustomer> cusCustomerList = cusCustomerEntityService.findAllCustomers();
 
         List<CusCustomerDto> cusCustomerDtoList = CusCustomerMapper.INSTANCE.convertToCusCustomerDtoList(cusCustomerList);
 
@@ -60,7 +60,8 @@ public class CusCustomerService {
     public CusCustomerDto updateCustomer(CusCustomerUpdateDto cusCustomerUpdateDto) {
 
         Long id = cusCustomerUpdateDto.getId();
-        cusCustomerEntityService.getByIdWithControl(id);
+        cusCustomerValidationService.controlIsCustomerExist(id);
+        cusCustomerValidationService.controlIsCustomerOwnedByCurrentUser(id);
 
         CusCustomer cusCustomer = CusCustomerMapper.INSTANCE.convertToCusCustomer(cusCustomerUpdateDto);
 
