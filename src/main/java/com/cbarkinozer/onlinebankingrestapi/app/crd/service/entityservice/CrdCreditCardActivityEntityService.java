@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,9 +23,13 @@ public class CrdCreditCardActivityEntityService extends BaseEntityService<CrdCre
         super(dao);
     }
 
-    public List<CrdCreditCardActivity> findCreditCardActivityByAmountInterval(BigDecimal min, BigDecimal max) {
+    public List<CrdCreditCardActivity> findCreditCardActivityByAmountInterval(List<Long> crdCreditCardIdList, BigDecimal min, BigDecimal max) {
 
-        List<CrdCreditCardActivity> crdCreditCardActivityList = getDao().findAllByAmountBetween(min,max);
+        if (crdCreditCardIdList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<CrdCreditCardActivity> crdCreditCardActivityList = getDao().findAllByCrdCreditCardIdInAndAmountBetween(crdCreditCardIdList, min, max);
 
         return crdCreditCardActivityList;
     }

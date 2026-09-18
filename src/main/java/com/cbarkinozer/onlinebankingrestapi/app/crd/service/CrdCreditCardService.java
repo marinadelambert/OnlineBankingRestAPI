@@ -136,6 +136,8 @@ public class CrdCreditCardService {
     public List<CrdCreditCardActivityDto> findCreditCardActivityBetweenDates(Long creditCardId,
                                                                              LocalDate startDate, LocalDate endDate) {
 
+        crdCreditCardEntityService.getByIdWithOwnershipControl(creditCardId);
+
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime   = endDate.atStartOfDay();
 
