@@ -62,7 +62,6 @@ public class CusCustomerService {
     public CusCustomerDto updateCustomer(CusCustomerUpdateDto cusCustomerUpdateDto) {
 
         Long id = cusCustomerUpdateDto.getId();
-        cusCustomerValidationService.controlIsCustomerOwnedByCurrentUser(id);
         cusCustomerValidationService.controlIsCustomerExist(id);
         cusCustomerValidationService.controlIsCustomerOwnedByCurrentUser(id);
 
