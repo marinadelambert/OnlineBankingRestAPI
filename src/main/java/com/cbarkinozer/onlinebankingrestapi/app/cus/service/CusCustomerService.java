@@ -5,7 +5,9 @@ import com.cbarkinozer.onlinebankingrestapi.app.cus.dto.CusCustomerDto;
 import com.cbarkinozer.onlinebankingrestapi.app.cus.dto.CusCustomerSaveDto;
 import com.cbarkinozer.onlinebankingrestapi.app.cus.dto.CusCustomerUpdateDto;
 import com.cbarkinozer.onlinebankingrestapi.app.cus.entity.CusCustomer;
+import com.cbarkinozer.onlinebankingrestapi.app.cus.enums.CusErrorMessage;
 import com.cbarkinozer.onlinebankingrestapi.app.cus.service.entityservice.CusCustomerEntityService;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.ItemNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,8 @@ public class CusCustomerService {
     }
 
     public CusCustomerDto findCustomerById(Long id) {
+
+        controlIsCurrentCustomer(id);
 
         CusCustomer cusCustomer = cusCustomerEntityService.getByIdWithControl(id);
 
@@ -60,6 +64,7 @@ public class CusCustomerService {
     public CusCustomerDto updateCustomer(CusCustomerUpdateDto cusCustomerUpdateDto) {
 
         Long id = cusCustomerUpdateDto.getId();
+        controlIsCurrentCustomer(id);
         cusCustomerValidationService.controlIsCustomerExist(id);
 
         CusCustomer cusCustomer = CusCustomerMapper.INSTANCE.convertToCusCustomer(cusCustomerUpdateDto);
@@ -84,8 +89,19 @@ public class CusCustomerService {
 
     public void deleteCustomer(Long id) {
 
+        controlIsCurrentCustomer(id);
+
         CusCustomer cusCustomer = cusCustomerEntityService.getByIdWithControl(id);
 
         cusCustomerEntityService.delete(cusCustomer);
+    }
+
+    private void controlIsCurrentCustomer(Long id) {
+
+        Long currentCustomerId = cusCustomerEntityService.getCurrentCustomerId();
+
+        if (currentCustomerId == null || !currentCustomerId.equals(id)){
+            throw new ItemNotFoundException(CusErrorMessage.CUSTOMER_NOT_FOUND);
+        }
     }
 }
