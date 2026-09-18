@@ -58,12 +58,11 @@ class CrdCreditCardControllerTest {
         CrdCreditCardDto crdCreditCardDto = mock(CrdCreditCardDto.class);
 
         crdCreditCardDto.setId(1L);
-        crdCreditCardDto.setCardNo(1111111111111111L);
+        crdCreditCardDto.setCardNo("************1111");
         crdCreditCardDto.setAvailableCardLimit(BigDecimal.valueOf(90000));
         crdCreditCardDto.setCurrentDebt(BigDecimal.valueOf(0));
         crdCreditCardDto.setCusCustomerId(1L);
         crdCreditCardDto.setCutoffDate(LocalDate.now().plusDays(30));
-        crdCreditCardDto.setCvvNo(111L);
         crdCreditCardDto.setDueDate(LocalDate.now().plusYears(4));
         crdCreditCardDto.setCancelDate(null);
 

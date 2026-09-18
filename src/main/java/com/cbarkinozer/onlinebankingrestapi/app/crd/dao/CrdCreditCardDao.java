@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface CrdCreditCardDao extends JpaRepository<CrdCreditCard,Long> {
 
-    List<CrdCreditCard> findAllByStatusType(GenStatusType statusType);
+    List<CrdCreditCard> findAllByCusCustomerIdAndStatusType(Long cusCustomerId, GenStatusType statusType);
 
     CrdCreditCard findByCardNoAndCvvNoAndExpireDateAndStatusType(Long cardNo, Long cvvNo, LocalDate expireDate, GenStatusType statusType);
 

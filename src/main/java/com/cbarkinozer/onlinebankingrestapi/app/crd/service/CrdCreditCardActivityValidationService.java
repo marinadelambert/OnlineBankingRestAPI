@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 public class CrdCreditCardActivityValidationService {
 
     private final CrdCreditCardEntityService crdCreditCardEntityService;
+    private final CrdCreditCardValidationService crdCreditCardValidationService;
 
     public void controlIsParameterMinLargerThanMax(BigDecimal min, BigDecimal max) {
 
@@ -25,8 +26,11 @@ public class CrdCreditCardActivityValidationService {
         }
     }
 
-    public void controlIsCreditCardExist(Long creditCardId) {
+    public void controlIsCreditCardBelongsToCurrentCustomer(Long creditCardId) {
 
-        crdCreditCardEntityService.findById(creditCardId).orElseThrow(()-> new ItemNotFoundException(CrdErrorMessage.CREDIT_CARD_NOT_FOUND));
+        CrdCreditCard crdCreditCard = crdCreditCardEntityService.findById(creditCardId)
+                .orElseThrow(()-> new ItemNotFoundException(CrdErrorMessage.CREDIT_CARD_NOT_FOUND));
+
+        crdCreditCardValidationService.controlIsCreditCardBelongsToCurrentCustomer(crdCreditCard);
     }
 }
