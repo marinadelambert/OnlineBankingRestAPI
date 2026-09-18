@@ -40,6 +40,8 @@ public enum LoaErrorMessage implements BaseErrorMessage {
             , "Please enter an installment count that is smaller than the limit:" ),
     LOAN_ALREADY_PAID_OFF("Loan is already paid off"
             , "Please be sure that you entered correct loan id." ),
+    LOAN_NOT_FOUND("Loan not found"
+            , "Please be sure that you entered correct loan id." ),
     ;
 
     private  final String message;
