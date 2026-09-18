@@ -32,7 +32,7 @@ public class AccAccountService {
 
     public AccAccountDto findAccountById(Long id) {
 
-        AccAccount accAccount = accAccountEntityService.getByIdWithControl(id);
+        AccAccount accAccount = accAccountEntityService.getByIdWithOwnershipControl(id);
 
         AccAccountDto accAccountDto = AccAccountMapper.INSTANCE.convertToAccAccountDto(accAccount);
 
@@ -76,7 +76,7 @@ public class AccAccountService {
 
     public void cancelAccount(Long id) {
 
-        AccAccount accAccount = accAccountEntityService.getByIdWithControl(id);
+        AccAccount accAccount = accAccountEntityService.getByIdWithOwnershipControl(id);
 
         accAccount.setStatusType(GenStatusType.PASSIVE);
         accAccountEntityService.save(accAccount);

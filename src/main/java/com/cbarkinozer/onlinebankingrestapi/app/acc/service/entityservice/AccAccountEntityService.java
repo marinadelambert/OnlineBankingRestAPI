@@ -4,6 +4,7 @@ import com.cbarkinozer.onlinebankingrestapi.app.acc.dao.AccAccountDao;
 import com.cbarkinozer.onlinebankingrestapi.app.acc.entity.AccAccount;
 import com.cbarkinozer.onlinebankingrestapi.app.acc.enums.AccErrorMessage;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.enums.GenStatusType;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.GenForbiddenException;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.ItemNotFoundException;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.service.BaseEntityService;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,34 @@ public class AccAccountEntityService extends BaseEntityService<AccAccount, AccAc
 
     public List<AccAccount> findAllActiveAccounts() {
 
-        List<AccAccount> accAccountList = getDao().findAllByStatusType(GenStatusType.ACTIVE);
+        Long currentCustomerId = getCurrentCustomerId();
+
+        List<AccAccount> accAccountList = getDao().findAllByCustomerIdAndStatusType(currentCustomerId, GenStatusType.ACTIVE);
 
         return accAccountList;
     }
 
+    public AccAccount getByIdWithOwnershipControl(Long id) {
+
+        AccAccount accAccount = getByIdWithControl(id);
+
+        controlIsOwnedByCurrentCustomer(accAccount.getCustomerId());
+
+        return accAccount;
+    }
+
+    public void controlIsOwnedByCurrentCustomer(Long customerId) {
+
+        Long currentCustomerId = getCurrentCustomerId();
+
+        if (currentCustomerId == null || !currentCustomerId.equals(customerId)){
+            throw new GenForbiddenException(AccErrorMessage.ACCOUNT_ACCESS_DENIED);
+        }
+    }
+
     public List<AccAccount> findAccountByCustomerId(Long customerId) {
+
+        controlIsOwnedByCurrentCustomer(customerId);
 
         List<AccAccount> accAccountList = getDao().findAllByCustomerId(customerId);
 
