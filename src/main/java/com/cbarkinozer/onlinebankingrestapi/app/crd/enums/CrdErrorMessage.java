@@ -12,6 +12,9 @@ public enum CrdErrorMessage implements BaseErrorMessage {
     CREDIT_CARD_NOT_FOUND("Credit card not found","Please be sure that your credit card id belongs to a credit card."),
     FIELDS_CANNOT_BE_NEGATIVE("Fields cannot be negative","Please be sure that you entered all the fields"),
     CREDIT_CARD_CANCELLED("Credit card cancelled","Please be sure that your card is not cancelled or you entered the correct card credentials"),
+    CREDIT_CARD_ACCESS_DENIED("Credit card access denied","This credit card does not belong to the authenticated customer."),
+    ACTIVITY_NOT_REFUNDABLE("Activity is not refundable","Only spend activities can be refunded."),
+    ACTIVITY_ALREADY_REFUNDED("Activity already refunded","This activity has already been refunded."),
     ;
 
     private final String message;

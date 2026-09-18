@@ -36,4 +36,7 @@ public class CrdCreditCardActivity extends BaseEntity {
     @Column(name = "CARD_ACTIVITY_TYPE", length = 30, nullable = false)
     @Enumerated(EnumType.STRING)
     private CrdCreditCardActivityType cardActivityType;
+
+    @Column(name = "ID_REFUNDED_ACTIVITY", unique = true)
+    private Long refundedActivityId;
 }

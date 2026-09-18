@@ -20,6 +20,8 @@ public interface CrdCreditCardActivityDao extends JpaRepository<CrdCreditCardAct
 
     List<CrdCreditCardActivity> findAllByAmountBetween(BigDecimal min, BigDecimal max);
 
+    boolean existsByRefundedActivityId(Long refundedActivityId);
+
     List<CrdCreditCardActivity> findAllByCrdCreditCardIdAndTransactionDateBetween(Long crdCreditCardId, LocalDateTime startDate, LocalDateTime endDate);
 
     Page<CrdCreditCardActivity> findAllByCrdCreditCardIdAndTransactionDateBetween(

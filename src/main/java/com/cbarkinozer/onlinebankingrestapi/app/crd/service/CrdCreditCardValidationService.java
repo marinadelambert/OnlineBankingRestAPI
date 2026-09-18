@@ -2,10 +2,14 @@ package com.cbarkinozer.onlinebankingrestapi.app.crd.service;
 
 import com.cbarkinozer.onlinebankingrestapi.app.crd.dto.CrdCreditCardSpendDto;
 import com.cbarkinozer.onlinebankingrestapi.app.crd.entity.CrdCreditCard;
+import com.cbarkinozer.onlinebankingrestapi.app.crd.entity.CrdCreditCardActivity;
+import com.cbarkinozer.onlinebankingrestapi.app.crd.enums.CrdCreditCardActivityType;
 import com.cbarkinozer.onlinebankingrestapi.app.crd.enums.CrdErrorMessage;
+import com.cbarkinozer.onlinebankingrestapi.app.crd.service.entityservice.CrdCreditCardActivityEntityService;
 import com.cbarkinozer.onlinebankingrestapi.app.crd.service.entityservice.CrdCreditCardEntityService;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.enums.GenStatusType;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.GenBusinessException;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.GenForbiddenException;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.IllegalFieldException;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +25,7 @@ import java.time.LocalDate;
 public class CrdCreditCardValidationService {
 
     private final CrdCreditCardEntityService crdCreditCardEntityService;
+    private final CrdCreditCardActivityEntityService crdCreditCardActivityEntityService;
 
     public void validateCardLimit(BigDecimal currentAvailableLimit) {
 
@@ -86,6 +91,27 @@ public class CrdCreditCardValidationService {
 
         if(hasNull){
             throw new IllegalFieldException(CrdErrorMessage.FIELDS_CANNOT_BE_NEGATIVE);
+        }
+    }
+
+    public void controlIsCardBelongsToCurrentCustomer(CrdCreditCard crdCreditCard) {
+
+        Long currentCustomerId = crdCreditCardEntityService.getCurrentCustomerId();
+
+        if (crdCreditCard == null || crdCreditCard.getCusCustomerId() == null
+                || !crdCreditCard.getCusCustomerId().equals(currentCustomerId)) {
+            throw new GenForbiddenException(CrdErrorMessage.CREDIT_CARD_ACCESS_DENIED);
+        }
+    }
+
+    public void controlIsActivityRefundable(CrdCreditCardActivity crdCreditCardActivity) {
+
+        if (crdCreditCardActivity.getCardActivityType() != CrdCreditCardActivityType.SPEND) {
+            throw new IllegalFieldException(CrdErrorMessage.ACTIVITY_NOT_REFUNDABLE);
+        }
+
+        if (crdCreditCardActivityEntityService.existsByRefundedActivityId(crdCreditCardActivity.getId())) {
+            throw new IllegalFieldException(CrdErrorMessage.ACTIVITY_ALREADY_REFUNDED);
         }
     }
 
