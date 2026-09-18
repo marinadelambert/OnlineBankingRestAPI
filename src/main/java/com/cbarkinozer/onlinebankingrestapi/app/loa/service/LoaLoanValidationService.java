@@ -106,6 +106,15 @@ public class LoaLoanValidationService {
         }
     }
 
+    public void controlIsLoanOwnedByCustomer(LoaLoan loaLoan, Long customerId) {
+
+        boolean isOwner = loaLoan != null && customerId != null && customerId.equals(loaLoan.getCustomerId());
+
+        if (!isOwner){
+            throw new ItemNotFoundException(LoaErrorMessage.LOAN_NOT_FOUND);
+        }
+    }
+
     public void controlIsMonthlyInstallmentAmountPositive(BigDecimal monthlyInstallmentAmount) {
 
         if(monthlyInstallmentAmount.compareTo(BigDecimal.ZERO)<=0){
