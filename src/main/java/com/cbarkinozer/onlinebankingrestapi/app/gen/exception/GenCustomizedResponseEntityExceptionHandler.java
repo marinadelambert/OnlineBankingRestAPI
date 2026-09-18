@@ -2,6 +2,7 @@ package com.cbarkinozer.onlinebankingrestapi.app.gen.exception;
 
 import com.cbarkinozer.onlinebankingrestapi.app.gen.dto.RestResponse;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.GenBusinessException;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.GenForbiddenException;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.IllegalFieldException;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.ItemNotFoundException;
 import org.springframework.http.HttpHeaders;
@@ -48,6 +49,21 @@ public class GenCustomizedResponseEntityExceptionHandler extends ResponseEntityE
         restResponse.setMessages(message);
 
         return new ResponseEntity<>(restResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public final ResponseEntity<Object> handleAllGenForbiddenException(GenForbiddenException ex, WebRequest webRequest){
+
+        Date errorDate = new Date();
+        String message = ex.getBaseErrorMessage().getMessage();
+        String description = ex.getBaseErrorMessage().getDetailMessage();
+
+        GenExceptionResponse genExceptionResponse = new GenExceptionResponse(errorDate, message, description);
+
+        RestResponse<GenExceptionResponse> restResponse = RestResponse.error(genExceptionResponse);
+        restResponse.setMessages(message);
+
+        return new ResponseEntity<>(restResponse, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler

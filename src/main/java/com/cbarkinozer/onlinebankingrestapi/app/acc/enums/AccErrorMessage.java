@@ -15,6 +15,8 @@ public enum AccErrorMessage implements BaseErrorMessage {
             ,"Please be sure that you entered a balance that is not negative"),
     AMOUNT_MUST_BE_POSITIVE("Amount must be positive"
             ,"Please be sure that the entered amount value is larger than zero"),
+    ACCOUNT_ACCESS_DENIED("Account does not belong to the current customer!"
+            ,"You can only access and operate on your own accounts."),
     ;
 
     private  final String message;

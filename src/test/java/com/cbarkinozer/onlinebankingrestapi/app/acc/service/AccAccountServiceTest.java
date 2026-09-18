@@ -65,7 +65,7 @@ class AccAccountServiceTest {
         AccAccount accAccount = mock(AccAccount.class);
         when(accAccount.getId()).thenReturn(id);
 
-        when(accAccountEntityService.getByIdWithControl(id)).thenReturn(accAccount);
+        when(accAccountEntityService.getByIdWithOwnershipControl(id)).thenReturn(accAccount);
 
         AccAccountDto accAccountDto = accAccountService.findAccountById(id);
 
@@ -75,11 +75,11 @@ class AccAccountServiceTest {
     @Test
     void shouldNotFindProductById_WhenId_DoesNotExist(){
 
-        when(accAccountEntityService.getByIdWithControl(anyLong())).thenThrow(ItemNotFoundException.class);
+        when(accAccountEntityService.getByIdWithOwnershipControl(anyLong())).thenThrow(ItemNotFoundException.class);
 
         assertThrows(ItemNotFoundException.class, () -> accAccountService.findAccountById(anyLong()));
 
-        verify(accAccountEntityService).getByIdWithControl(anyLong());
+        verify(accAccountEntityService).getByIdWithOwnershipControl(anyLong());
     }
 
     @Test
@@ -100,11 +100,11 @@ class AccAccountServiceTest {
     @Test
     void shouldNotFindAccountById_WhenId_DoesNotExist(){
 
-        when(accAccountEntityService.getByIdWithControl(anyLong())).thenThrow(ItemNotFoundException.class);
+        when(accAccountEntityService.getByIdWithOwnershipControl(anyLong())).thenThrow(ItemNotFoundException.class);
 
         assertThrows(ItemNotFoundException.class, () -> accAccountService.findAccountById(anyLong()));
 
-        verify(accAccountEntityService).getByIdWithControl(anyLong());
+        verify(accAccountEntityService).getByIdWithOwnershipControl(anyLong());
     }
 
     @Test
@@ -172,21 +172,21 @@ class AccAccountServiceTest {
 
         AccAccount accAccount = mock(AccAccount.class);
 
-        when(accAccountEntityService.getByIdWithControl(anyLong())).thenReturn(accAccount);
+        when(accAccountEntityService.getByIdWithOwnershipControl(anyLong())).thenReturn(accAccount);
 
         accAccountService.cancelAccount(anyLong());
 
-        verify(accAccountEntityService).getByIdWithControl(anyLong());
+        verify(accAccountEntityService).getByIdWithOwnershipControl(anyLong());
         verify(accAccountEntityService).save(any());
     }
 
     @Test
     void shouldNotCancelAccount_WhenId_DoesNotExist(){
 
-        when(accAccountEntityService.getByIdWithControl(anyLong())).thenThrow(ItemNotFoundException.class);
+        when(accAccountEntityService.getByIdWithOwnershipControl(anyLong())).thenThrow(ItemNotFoundException.class);
 
         assertThrows(ItemNotFoundException.class, () -> accAccountService.cancelAccount(anyLong()));
 
-        verify(accAccountEntityService).getByIdWithControl(anyLong());
+        verify(accAccountEntityService).getByIdWithOwnershipControl(anyLong());
     }
 }
