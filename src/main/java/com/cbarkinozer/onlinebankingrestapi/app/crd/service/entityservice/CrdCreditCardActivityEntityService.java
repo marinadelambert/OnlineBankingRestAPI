@@ -46,6 +46,11 @@ public class CrdCreditCardActivityEntityService extends BaseEntityService<CrdCre
         return getDao().findAllByCrdCreditCardIdAndTransactionDateBetween(creditCardId, startDateTime, endDateTime, pageRequest).toList();
     }
 
+    public boolean existsByRefundedActivityId(Long refundedActivityId) {
+
+        return getDao().existsByRefundedActivityId(refundedActivityId);
+    }
+
     public List<CrdCreditCardActivityAnalysisDto> getCardActivityAnalysis(Long creditCardId) {
 
         List<CrdCreditCardActivityAnalysisDto> crdCreditCardActivityAnalysisDtoList = getDao().getCardActivityAnalysis(creditCardId);

@@ -127,6 +127,8 @@ public class CrdCreditCardService {
 
         CrdCreditCard crdCreditCard = crdCreditCardEntityService.getByIdWithControl(cardId);
 
+        crdCreditCardValidationService.controlIsCardBelongsToCurrentCustomer(crdCreditCard);
+
         crdCreditCard.setStatusType(GenStatusType.PASSIVE);
         crdCreditCard.setCancelDate(LocalDateTime.now());
 
@@ -218,11 +220,14 @@ public class CrdCreditCardService {
 
         Long creditCardId = oldCrdCreditCardActivity.getCrdCreditCardId();
         CrdCreditCard crdCreditCard = crdCreditCardEntityService.getByIdWithControl(creditCardId);
+
+        crdCreditCardValidationService.controlIsCardBelongsToCurrentCustomer(crdCreditCard);
         crdCreditCardValidationService.controlIsCardCancelled(crdCreditCard.getStatusType());
+        crdCreditCardValidationService.controlIsActivityRefundable(oldCrdCreditCardActivity);
 
         BigDecimal amount = oldCrdCreditCardActivity.getAmount();
 
-        crdCreditCard = updateCreditCardForRefund(oldCrdCreditCardActivity, amount);
+        crdCreditCard = addLimitToCard(crdCreditCard, amount);
 
         CrdCreditCardActivity crdCreditCardActivity = createCreditCardActivityForRefund(oldCrdCreditCardActivity, amount, crdCreditCard);
 
@@ -241,17 +246,10 @@ public class CrdCreditCardService {
         crdCreditCardActivity.setDescription(description);
         crdCreditCardActivity.setCardActivityType(CrdCreditCardActivityType.REFUND);
         crdCreditCardActivity.setTransactionDate(LocalDateTime.now());
+        crdCreditCardActivity.setRefundedActivityId(oldCrdCreditCardActivity.getId());
 
         crdCreditCardActivity = crdCreditCardActivityEntityService.save(crdCreditCardActivity);
         return crdCreditCardActivity;
-    }
-
-    private CrdCreditCard updateCreditCardForRefund(CrdCreditCardActivity oldCrdCreditCardActivity, BigDecimal amount) {
-
-        CrdCreditCard crdCreditCard = crdCreditCardEntityService.getByIdWithControl(oldCrdCreditCardActivity.getCrdCreditCardId());
-
-        crdCreditCard = addLimitToCard(crdCreditCard, amount);
-        return crdCreditCard;
     }
 
     private CrdCreditCard addLimitToCard(CrdCreditCard crdCreditCard, BigDecimal amount) {
@@ -274,6 +272,7 @@ public class CrdCreditCardService {
 
         CrdCreditCard crdCreditCard = crdCreditCardEntityService.getByIdWithControl(creditCardId);
 
+        crdCreditCardValidationService.controlIsCardBelongsToCurrentCustomer(crdCreditCard);
         crdCreditCardValidationService.controlIsCardCancelled(crdCreditCard.getStatusType());
 
         addLimitToCard(crdCreditCard, amount);
