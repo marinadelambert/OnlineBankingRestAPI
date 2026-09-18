@@ -61,6 +61,7 @@ public class CusCustomerService {
 
         Long id = cusCustomerUpdateDto.getId();
         cusCustomerValidationService.controlIsCustomerExist(id);
+        cusCustomerValidationService.controlIsCustomerOwnedByCurrentUser(id);
 
         CusCustomer cusCustomer = CusCustomerMapper.INSTANCE.convertToCusCustomer(cusCustomerUpdateDto);
 
