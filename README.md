@@ -38,7 +38,11 @@ Change following:
 ```
 spring.jpa.hibernate.ddl-auto=create  
 spring.datasource.username=[your postgresql username here(probably postgres)]  
-spring.datasource.password=[your postgresql password here]  
+```
+Set the following environment variables before running (they are never committed):  
+```
+DB_PASSWORD=[your postgresql password]
+JWT_APP_KEY=[base64-encoded random key of at least 64 bytes, e.g. `openssl rand -base64 64 | tr -d '\n'`]
 ```
 **From here, you can run the application if you will not use kafka messaging feature**
 For Kafka, I used a docker container.   
