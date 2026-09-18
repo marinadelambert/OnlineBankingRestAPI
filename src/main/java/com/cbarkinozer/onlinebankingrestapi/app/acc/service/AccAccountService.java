@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -63,6 +64,7 @@ public class AccAccountService {
         accAccount.setStatusType(GenStatusType.ACTIVE);
         accAccount.setIbanNo(ibanNo);
         accAccount.setCustomerId(currentCustomerId);
+        accAccount.setCurrentBalance(BigDecimal.ZERO);
 
         accAccountValidationService.controlAreFieldsNotNull(accAccount);
         accAccountValidationService.controlIsBalanceNotNegative(accAccount);

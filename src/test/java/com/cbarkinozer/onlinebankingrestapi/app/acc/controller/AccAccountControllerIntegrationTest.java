@@ -87,7 +87,6 @@ class AccAccountControllerIntegrationTest extends BaseTest {
 
         AccAccountSaveDto accAccountSaveDto = new AccAccountSaveDto();
         accAccountSaveDto.setAccountType(AccAccountType.DEPOSIT);
-        accAccountSaveDto.setCurrentBalance(BigDecimal.valueOf(100));
         accAccountSaveDto.setCurrencyType(AccCurrencyType.TL);
 
         String content = objectMapper.writeValueAsString(accAccountSaveDto);
