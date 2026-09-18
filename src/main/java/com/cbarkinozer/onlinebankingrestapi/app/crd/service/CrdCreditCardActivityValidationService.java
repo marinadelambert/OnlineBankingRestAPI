@@ -29,4 +29,9 @@ public class CrdCreditCardActivityValidationService {
 
         crdCreditCardEntityService.findById(creditCardId).orElseThrow(()-> new ItemNotFoundException(CrdErrorMessage.CREDIT_CARD_NOT_FOUND));
     }
+
+    public void controlIsCreditCardOwnedByCurrentCustomer(Long creditCardId) {
+
+        crdCreditCardEntityService.getByIdWithOwnershipControl(creditCardId);
+    }
 }
