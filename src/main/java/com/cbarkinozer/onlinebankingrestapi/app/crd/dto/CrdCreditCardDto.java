@@ -10,8 +10,7 @@ public class CrdCreditCardDto {
 
     private Long id;
     private Long cusCustomerId;
-    private Long cardNo;
-    private Long cvvNo;
+    private String cardNo;
     private LocalDate expireDate;
     private BigDecimal totalLimit;
     private BigDecimal availableCardLimit;

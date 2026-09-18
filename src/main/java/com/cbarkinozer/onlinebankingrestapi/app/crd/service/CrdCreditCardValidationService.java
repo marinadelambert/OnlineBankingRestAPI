@@ -7,6 +7,7 @@ import com.cbarkinozer.onlinebankingrestapi.app.crd.service.entityservice.CrdCre
 import com.cbarkinozer.onlinebankingrestapi.app.gen.enums.GenStatusType;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.GenBusinessException;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.IllegalFieldException;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.exceptions.UnauthorizedAccessException;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -86,6 +88,15 @@ public class CrdCreditCardValidationService {
 
         if(hasNull){
             throw new IllegalFieldException(CrdErrorMessage.FIELDS_CANNOT_BE_NEGATIVE);
+        }
+    }
+
+    public void controlIsCreditCardBelongsToCurrentCustomer(CrdCreditCard crdCreditCard) {
+
+        Long currentCustomerId = crdCreditCardEntityService.getCurrentCustomerId();
+
+        if (currentCustomerId == null || !Objects.equals(crdCreditCard.getCusCustomerId(), currentCustomerId)){
+            throw new UnauthorizedAccessException(CrdErrorMessage.CREDIT_CARD_DOES_NOT_BELONG_TO_CUSTOMER);
         }
     }
 

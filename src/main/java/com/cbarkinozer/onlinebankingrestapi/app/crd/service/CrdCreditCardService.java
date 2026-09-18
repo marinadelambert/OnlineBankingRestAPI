@@ -31,7 +31,9 @@ public class CrdCreditCardService {
 
     public List<CrdCreditCardDto> findAllCreditCards() {
 
-        List<CrdCreditCard> crdCreditCardList = crdCreditCardEntityService.findAllActiveCreditCardList();
+        Long currentCustomerId = crdCreditCardEntityService.getCurrentCustomerId();
+
+        List<CrdCreditCard> crdCreditCardList = crdCreditCardEntityService.findAllActiveCreditCardListByCustomerId(currentCustomerId);
 
         List<CrdCreditCardDto> crdCreditCardResponseDtoList = CrdCreditCardMapper.INSTANCE.convertToCrdCreditCardDtoList(crdCreditCardList);
 
@@ -40,7 +42,7 @@ public class CrdCreditCardService {
 
     public CrdCreditCardDto findCreditCardById(Long id) {
 
-        CrdCreditCard crdCreditCard = crdCreditCardEntityService.getByIdWithControl(id);
+        CrdCreditCard crdCreditCard = getOwnCreditCardWithControl(id);
 
         CrdCreditCardDto result = CrdCreditCardMapper.INSTANCE.convertToCrdCreditCardDto(crdCreditCard);
 
@@ -50,7 +52,7 @@ public class CrdCreditCardService {
 
     public CrdCreditCardDetailsDto getCardDetails(Long id) {
 
-        CrdCreditCard crdCreditCard = crdCreditCardEntityService.getByIdWithControl(id);
+        CrdCreditCard crdCreditCard = getOwnCreditCardWithControl(id);
         LocalDateTime termEndDate = crdCreditCard.getCutoffDate().atStartOfDay();
         Long crdCreditCardId = crdCreditCard.getId();
 
@@ -67,6 +69,15 @@ public class CrdCreditCardService {
         crdCreditCardDetailsDto.setCrdCreditCardActivityDtoList(crdCreditCardActivityDtoList);
 
         return crdCreditCardDetailsDto;
+    }
+
+    private CrdCreditCard getOwnCreditCardWithControl(Long id) {
+
+        CrdCreditCard crdCreditCard = crdCreditCardEntityService.getByIdWithControl(id);
+
+        crdCreditCardValidationService.controlIsCreditCardBelongsToCurrentCustomer(crdCreditCard);
+
+        return crdCreditCard;
     }
 
     public CrdCreditCardDto saveCreditCard(CrdCreditCardSaveDto crdCreditCardSaveDto) {
@@ -135,6 +146,8 @@ public class CrdCreditCardService {
 
     public List<CrdCreditCardActivityDto> findCreditCardActivityBetweenDates(Long creditCardId,
                                                                              LocalDate startDate, LocalDate endDate) {
+
+        getOwnCreditCardWithControl(creditCardId);
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime   = endDate.atStartOfDay();

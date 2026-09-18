@@ -7,6 +7,8 @@ import org.springframework.util.StringUtils;
 
 public class StringUtil {
 
+    private static final int VISIBLE_CARD_NO_DIGIT_COUNT = 4;
+
     public static Long getRandomNumber(int charCount){
 
         String randomNumeric;
@@ -38,6 +40,23 @@ public class StringUtil {
         String randomAlphabetic = RandomStringUtils.randomAlphabetic(charCount);
 
         return randomAlphabetic;
+    }
+
+    public static String maskCardNo(Long cardNo){
+
+        if (cardNo == null){
+            return null;
+        }
+
+        String cardNoAsString = String.valueOf(cardNo);
+
+        if (cardNoAsString.length() <= VISIBLE_CARD_NO_DIGIT_COUNT){
+            return "*".repeat(cardNoAsString.length());
+        }
+
+        String lastDigits = cardNoAsString.substring(cardNoAsString.length() - VISIBLE_CARD_NO_DIGIT_COUNT);
+
+        return "*".repeat(cardNoAsString.length() - VISIBLE_CARD_NO_DIGIT_COUNT) + lastDigits;
     }
 
     private static void validateCharCount(int charCount) {

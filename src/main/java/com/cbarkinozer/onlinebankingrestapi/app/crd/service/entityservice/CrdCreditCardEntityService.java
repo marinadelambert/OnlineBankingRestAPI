@@ -19,12 +19,8 @@ public class CrdCreditCardEntityService extends BaseEntityService<CrdCreditCard,
         super(dao);
     }
 
-    public List<CrdCreditCard> findAllByStatusType(GenStatusType statusType){
-        return getDao().findAllByStatusType(statusType);
-    }
-
-    public List<CrdCreditCard> findAllActiveCreditCardList() {
-        return getDao().findAllByStatusType(GenStatusType.ACTIVE);
+    public List<CrdCreditCard> findAllActiveCreditCardListByCustomerId(Long cusCustomerId) {
+        return getDao().findAllByCusCustomerIdAndStatusType(cusCustomerId, GenStatusType.ACTIVE);
     }
 
     public CrdCreditCard findByCardNoAndCvvNoAndExpireDate(Long cardNo, Long cvvNo, LocalDate expireDate){

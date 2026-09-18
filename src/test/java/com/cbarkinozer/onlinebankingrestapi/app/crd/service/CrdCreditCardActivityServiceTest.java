@@ -44,9 +44,9 @@ class CrdCreditCardActivityServiceTest {
 
         List<CrdCreditCardActivity> expectedResult = createDummyCrdCreditCardActivityList();
 
-        when(crdCreditCardActivityEntityService.findCreditCardActivityByAmountInterval(min,max)).thenReturn(crdCreditCardActivityList);
+        when(crdCreditCardActivityEntityService.findCreditCardActivityByAmountInterval(1L,min,max)).thenReturn(crdCreditCardActivityList);
 
-        List<CrdCreditCardActivity> result = crdCreditCardActivityEntityService.findCreditCardActivityByAmountInterval(min,max);
+        List<CrdCreditCardActivity> result = crdCreditCardActivityEntityService.findCreditCardActivityByAmountInterval(1L,min,max);
 
         assertEquals(expectedResult, result);
         assertNotNull(result);

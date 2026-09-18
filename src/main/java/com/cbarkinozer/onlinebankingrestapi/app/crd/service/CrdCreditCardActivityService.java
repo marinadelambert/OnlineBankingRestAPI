@@ -27,7 +27,10 @@ public class CrdCreditCardActivityService {
 
         crdCreditCardActivityValidationService.controlIsParameterMinLargerThanMax(min,max);
 
-        List<CrdCreditCardActivity> crdCreditCardActivityList = crdCreditCardActivityEntityService.findCreditCardActivityByAmountInterval(min,max);
+        Long currentCustomerId = crdCreditCardActivityEntityService.getCurrentCustomerId();
+
+        List<CrdCreditCardActivity> crdCreditCardActivityList = crdCreditCardActivityEntityService
+                .findCreditCardActivityByAmountInterval(currentCustomerId,min,max);
 
         List<CrdCreditCardActivityDto> convertToCrdCreditCardDtoList = CrdCreditCardMapper.INSTANCE.convertToCrdCreditCardActivityDtoList(crdCreditCardActivityList);
 
@@ -36,7 +39,7 @@ public class CrdCreditCardActivityService {
 
     public List<CrdCreditCardActivityAnalysisDto> getCardActivityAnalysis(Long creditCardId) {
 
-        crdCreditCardActivityValidationService.controlIsCreditCardExist(creditCardId);
+        crdCreditCardActivityValidationService.controlIsCreditCardBelongsToCurrentCustomer(creditCardId);
 
         List<CrdCreditCardActivityAnalysisDto> crdCreditCardActivityAnalysisDtoList = crdCreditCardActivityEntityService.getCardActivityAnalysis(creditCardId);
 
