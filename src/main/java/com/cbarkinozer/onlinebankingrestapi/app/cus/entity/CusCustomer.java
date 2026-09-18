@@ -1,6 +1,7 @@
 package com.cbarkinozer.onlinebankingrestapi.app.cus.entity;
 
 import com.cbarkinozer.onlinebankingrestapi.app.gen.entity.BaseEntity;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.entity.CustomerOwnedEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name="CUS_CUSTOMER")
-public class CusCustomer extends BaseEntity {
+public class CusCustomer extends BaseEntity implements CustomerOwnedEntity {
     @Id
     @SequenceGenerator(name = "CusCustomer" , sequenceName = "CUS_CUSTOMER_ID_SEQ")
     @GeneratedValue(generator = "CusCustomer")
@@ -28,4 +29,8 @@ public class CusCustomer extends BaseEntity {
     @Column(name = "PASSWORD",length=100, nullable = false)
     private String password;
 
+    @Override
+    public Long getOwnerCustomerId() {
+        return id;
+    }
 }

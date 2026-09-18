@@ -55,7 +55,7 @@ public class AuthenticationService {
 
         CusCustomer cusCustomer = null;
         if (jwtUserDetails != null){
-            cusCustomer = cusCustomerEntityService.getByIdWithControl(jwtUserDetails.getId());
+            cusCustomer = cusCustomerEntityService.getByIdWithoutOwnerControl(jwtUserDetails.getId());
         }
 
         return cusCustomer;

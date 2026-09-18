@@ -1,6 +1,7 @@
 package com.cbarkinozer.onlinebankingrestapi.app.crd.entity;
 
 import com.cbarkinozer.onlinebankingrestapi.app.gen.entity.BaseEntity;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.entity.CustomerOwnedEntity;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.enums.GenStatusType;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name="CRD_CREDIT_CARD")
-public class CrdCreditCard extends BaseEntity {
+public class CrdCreditCard extends BaseEntity implements CustomerOwnedEntity {
 
     @Id
     @SequenceGenerator(name = "CrdCreditCard" , sequenceName = "CRD_CREDIT_CARD_ID_SEQ")
@@ -57,4 +58,9 @@ public class CrdCreditCard extends BaseEntity {
 
     @Column(name = "CANCEL_DATE")
     private LocalDateTime cancelDate;
+
+    @Override
+    public Long getOwnerCustomerId() {
+        return cusCustomerId;
+    }
 }

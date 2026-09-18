@@ -19,11 +19,11 @@ public class CusCustomerEntityService extends BaseEntityService<CusCustomer, Cus
         super(cusCustomerDao);
     }
 
-    public List<CusCustomer> findAllCustomers() {
+    public List<CusCustomer> findCurrentCustomerAsList() {
 
-        List<CusCustomer> cusCustomerList = getDao().findAll();
+        CusCustomer cusCustomer = getByIdWithControl(getCurrentCustomerId());
 
-        return cusCustomerList;
+        return List.of(cusCustomer);
     }
 
     public CusCustomer saveCustomer(CusCustomer cusCustomer) {

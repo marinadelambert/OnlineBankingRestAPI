@@ -24,7 +24,7 @@ public class CusCustomerService {
 
     public List<CusCustomerDto> findAllCustomers(){
 
-        List<CusCustomer> cusCustomerList = cusCustomerEntityService.findAllCustomers();
+        List<CusCustomer> cusCustomerList = cusCustomerEntityService.findCurrentCustomerAsList();
 
         List<CusCustomerDto> cusCustomerDtoList = CusCustomerMapper.INSTANCE.convertToCusCustomerDtoList(cusCustomerList);
 

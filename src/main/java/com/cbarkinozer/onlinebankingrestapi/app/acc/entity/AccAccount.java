@@ -3,6 +3,7 @@ package com.cbarkinozer.onlinebankingrestapi.app.acc.entity;
 import com.cbarkinozer.onlinebankingrestapi.app.acc.enums.AccAccountType;
 import com.cbarkinozer.onlinebankingrestapi.app.acc.enums.AccCurrencyType;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.entity.BaseEntity;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.entity.CustomerOwnedEntity;
 import com.cbarkinozer.onlinebankingrestapi.app.gen.enums.GenStatusType;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Table(name="ACC_ACCOUNT")
-public class AccAccount extends BaseEntity {
+public class AccAccount extends BaseEntity implements CustomerOwnedEntity {
 
     @Id
     @SequenceGenerator(name="AccAccount",sequenceName = "ACC_ACCOUNT_ID_SEQ")
@@ -45,4 +46,9 @@ public class AccAccount extends BaseEntity {
 
     @Column(name="CANCEL_DATE")
     private LocalDate cancelDate;
+
+    @Override
+    public Long getOwnerCustomerId() {
+        return customerId;
+    }
 }

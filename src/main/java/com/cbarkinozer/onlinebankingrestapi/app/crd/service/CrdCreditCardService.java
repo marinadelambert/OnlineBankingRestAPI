@@ -31,7 +31,7 @@ public class CrdCreditCardService {
 
     public List<CrdCreditCardDto> findAllCreditCards() {
 
-        List<CrdCreditCard> crdCreditCardList = crdCreditCardEntityService.findAllActiveCreditCardList();
+        List<CrdCreditCard> crdCreditCardList = crdCreditCardEntityService.findAllActiveCreditCardListOfCurrentCustomer();
 
         List<CrdCreditCardDto> crdCreditCardResponseDtoList = CrdCreditCardMapper.INSTANCE.convertToCrdCreditCardDtoList(crdCreditCardList);
 
@@ -135,6 +135,8 @@ public class CrdCreditCardService {
 
     public List<CrdCreditCardActivityDto> findCreditCardActivityBetweenDates(Long creditCardId,
                                                                              LocalDate startDate, LocalDate endDate) {
+
+        crdCreditCardEntityService.getByIdWithControl(creditCardId);
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime   = endDate.atStartOfDay();

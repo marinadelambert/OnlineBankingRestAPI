@@ -1,6 +1,7 @@
 package com.cbarkinozer.onlinebankingrestapi.app.loa.entity;
 
 import com.cbarkinozer.onlinebankingrestapi.app.gen.entity.BaseEntity;
+import com.cbarkinozer.onlinebankingrestapi.app.gen.entity.CustomerOwnedEntity;
 import com.cbarkinozer.onlinebankingrestapi.app.loa.enums.LoaLoanStatusType;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Table(name="LOA_LOAN")
-public class LoaLoan extends BaseEntity {
+public class LoaLoan extends BaseEntity implements CustomerOwnedEntity {
 
     @Id
     @SequenceGenerator(name="LoaLoan",sequenceName = "LOA_LOAN_ID_SEQ")
@@ -48,4 +49,8 @@ public class LoaLoan extends BaseEntity {
     @Column(name ="LOAN_STATUS_TYPE", length=30,nullable = false)
     private LoaLoanStatusType loanStatusType;
 
+    @Override
+    public Long getOwnerCustomerId() {
+        return customerId;
+    }
 }

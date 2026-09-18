@@ -42,7 +42,7 @@ class CusCustomerServiceTest {
 
         List<CusCustomerDto> expectedResult = createDummyCusCustomerDtoList();
 
-        when(cusCustomerEntityService.findAllCustomers()).thenReturn(cusCustomerList);
+        when(cusCustomerEntityService.findCurrentCustomerAsList()).thenReturn(cusCustomerList);
 
         List<CusCustomerDto> result = cusCustomerService.findAllCustomers();
 
